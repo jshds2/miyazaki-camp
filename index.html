@@ -6,9 +6,13 @@
     <title>宮崎キャンプ 旅程 2027</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // 配色カスタム：Tailwind既定のslateを、温かみのある紙色＋インクネイビーに差し替える
+        tailwind.config = { theme: { extend: { colors: { slate: { 50: '#faf8f2', 100: '#f3efe3', 200: '#e4ddc9', 300: '#cbc1a4', 400: '#7d8296', 500: '#5b6172', 600: '#454b5c', 700: '#2e3a4e', 800: '#1d2a3f', 900: '#131c2b' } } } } };
+    </script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -16,7 +20,7 @@
             --footer-gap: 160px;
         }
         body { font-family: 'Noto Sans JP', sans-serif; margin: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
-        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-serif { font-family: 'Oswald', 'Noto Sans JP', sans-serif; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         [v-cloak] { display: none; }
@@ -28,8 +32,10 @@
 <div id="app" v-cloak>
 
     <div class="max-w-2xl mx-auto px-4 pt-4 pb-3 text-center">
-        <p class="text-[11px] tracking-[0.2em] text-slate-400 font-serif uppercase">Miyazaki Baseball Camp 2027</p>
+        <p class="text-[11px] tracking-[0.25em] text-red-800/70 font-serif uppercase">Miyazaki Baseball Camp 2027</p>
         <h1 class="text-xl font-bold tracking-wide">宮崎キャンプ旅程</h1>
+        <div class="mt-2 mx-auto w-28 border-t-2 border-slate-800"></div>
+        <div class="mt-[3px] mx-auto w-28 border-t border-red-800/60"></div>
     </div>
 
     <!-- ヘッダー（カウントダウン + タブ） -->
@@ -187,7 +193,7 @@
                class="block bg-slate-800 text-white text-sm font-bold text-center py-3 rounded-xl mb-3">
                 <i class="fa-solid fa-magnifying-glass mr-1"></i>宮崎キャンプ全体の日程を検索
             </a>
-            <p class="text-[11px] text-slate-500 mb-3 px-1 leading-relaxed">※ 練習・試合の日程は球団・時期によってページが変わるため、公式HPと日程検索へのリンクにしています。</p>
+            <p class="text-[11px] text-slate-500 mb-3 px-1 leading-relaxed">※ 発表済みのキャンプ日程は各球団のカードに表示しています。練習・試合の詳しい日程は公式HPで確認してください。</p>
 
             <div class="space-y-3">
                 <div v-for="t in teams" :key="t.id" class="bg-white rounded-xl border shadow-sm overflow-hidden" :class="t.border">
@@ -196,7 +202,13 @@
                         <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/70" v-if="t.who">担当：{{ memberName(t.who) }}</span>
                     </div>
                     <div class="p-4">
-                        <p class="text-sm mb-3"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>{{ t.stadium }}</p>
+                        <p class="text-sm mb-2"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>{{ t.stadium }}</p>
+                        <div v-if="t.camp" class="text-xs leading-relaxed bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 mb-3">
+                            <p><span class="font-bold">キャンプ期間</span>：{{ t.camp }}</p>
+                            <p v-if="t.rest"><span class="font-bold">休養日</span>：{{ t.rest }}</p>
+                            <p v-if="t.note" class="text-slate-500 mt-0.5">{{ t.note }}</p>
+                        </div>
+                        <p v-else class="text-xs text-slate-400 mb-3">2027年の日程はまだ発表されていません（発表され次第、ここに表示します）</p>
                         <div class="grid grid-cols-2 gap-2">
                             <a :href="t.hp" target="_blank" rel="noopener" class="text-xs font-bold text-center py-2.5 rounded-lg border" :class="t.btn"><i class="fa-solid fa-arrow-up-right-from-square mr-1 text-[10px]"></i>公式HP</a>
                             <a :href="searchUrl(t.name + ' 宮崎 春季キャンプ 2027 日程')" target="_blank" rel="noopener" class="text-xs font-bold text-center py-2.5 rounded-lg border bg-white text-slate-600 border-slate-300"><i class="fa-regular fa-calendar mr-1"></i>キャンプ日程</a>
@@ -386,9 +398,11 @@ const firebaseConfig = {
     };
 
     const TEAMS = [
-        { id: "softbank", name: "ソフトバンク", stadium: "生目の杜運動公園",              hp: "https://www.softbankhawks.co.jp/", who: "原家",   head: "bg-yellow-50 text-yellow-800", border: "border-yellow-200", btn: "bg-yellow-50 text-yellow-800 border-yellow-300" },
+        { id: "softbank", name: "ソフトバンク", stadium: "生目の杜運動公園",              hp: "https://www.softbankhawks.co.jp/", who: "hara",      head: "bg-yellow-50 text-yellow-800", border: "border-yellow-200", btn: "bg-yellow-50 text-yellow-800 border-yellow-300",
+          camp: "2/1（月）〜2/28（日）", rest: "2/4・2/8・2/12・2/17・2/22・2/26", note: "組ごとに開始日が異なります（B組：2/1〜、A組：2/9〜、S組：2/13〜）" },
         { id: "orix",     name: "オリックス",   stadium: "清武総合運動公園",              hp: "https://www.buffaloes.co.jp/",     who: "iwasawa",   head: "bg-blue-50 text-blue-800",     border: "border-blue-200",   btn: "bg-blue-50 text-blue-800 border-blue-300" },
-        { id: "giants",   name: "巨人",         stadium: "ひなたサンマリンスタジアム宮崎", hp: "https://www.giants.jp/",           who: "kobayashi", head: "bg-orange-50 text-orange-800", border: "border-orange-200", btn: "bg-orange-50 text-orange-800 border-orange-300" },
+        { id: "giants",   name: "巨人",         stadium: "ひなたサンマリンスタジアム宮崎", hp: "https://www.giants.jp/",           who: "kobayashi", head: "bg-orange-50 text-orange-800", border: "border-orange-200", btn: "bg-orange-50 text-orange-800 border-orange-300",
+          camp: "2/1（月）〜2/14（日）", rest: "2/5・2/10", note: "一軍は2/16〜那覇キャンプに移動します（二軍は宮崎で継続）" },
         { id: "carp",     name: "カープ",       stadium: "天福球場",                      hp: "https://www.carp.co.jp/",          who: "kobayashi", head: "bg-red-50 text-red-800",       border: "border-red-200",    btn: "bg-red-50 text-red-800 border-red-300" },
         { id: "lions",    name: "西武",         stadium: "南郷スタジアム",                hp: "https://www.seibulions.jp/",       who: "hara",      head: "bg-sky-50 text-sky-800",       border: "border-sky-200",    btn: "bg-sky-50 text-sky-800 border-sky-300" }
     ];
