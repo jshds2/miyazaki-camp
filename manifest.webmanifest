@@ -1,0 +1,12 @@
+{
+  "name": "宮崎キャンプ 旅程 2027",
+  "short_name": "宮崎キャンプ",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f3efe3",
+  "theme_color": "#1d2a3f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
