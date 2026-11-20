@@ -111,7 +111,7 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-1.5 mb-3 bg-white border border-slate-200 rounded-xl px-3 py-2">
-                <span class="text-[11px] font-bold text-slate-500"><i class="fa-solid fa-baseball mr-1"></i>この日のキャンプ</span>
+                <span class="w-full text-[11px] font-bold text-slate-500"><i class="fa-solid fa-baseball mr-1"></i>この日のキャンプ</span>
                 <span v-for="t in teams" :key="t.id" class="text-[10px] font-bold px-2 py-0.5 rounded-full border" :class="campState(t, currentDay) === 'on' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : campState(t, currentDay) === 'rest' ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-slate-50 text-slate-400 border-slate-200'">{{ t.name }}<template v-if="campState(t, currentDay) === 'on'"> ○</template><template v-else-if="campState(t, currentDay) === 'rest'"> 休養日</template><template v-else-if="campState(t, currentDay) === 'tbd'"> 発表待ち</template><template v-else> 期間外</template></span>
             </div>
 
